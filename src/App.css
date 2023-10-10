@@ -1,38 +1,53 @@
-.App {
-  text-align: center;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: roboto;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* input[type=range] {
+    height: 40px;
+    -webkit-appearance: none;
+    margin: 10px 0;
+
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+input[type=range]:focus {
+    outline: none;
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 12px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 1px 1px 1px #000000;
+    background: #575757;
+    border-radius: 5px;
+    border: 1px solid #000000;
   }
-  to {
-    transform: rotate(360deg);
-  }
+
+  input[type=range]::-webkit-slider-thumb {
+    box-shadow: 1px 1px 1px #000000;
+    border: 1px solid #000000;
+    height: 15px;
+    width: 15px;
+    border-radius: 100%;
+    background: #264bc5;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -px;
+  } */
+
+.number-section{
+  margin-top: -12px;
+}
+
+@keyframes progressBarAnimation {
+  0% { width: 0; }
+}
+
+.progress-bar {
+  animation: progressBarAnimation 0.5s ease-in-out;
 }
