@@ -47,7 +47,8 @@ input[type=range]:focus {
 @keyframes progressBarAnimation {
   15% { width: 15%; }
   30% { width: 30%; }
-  70% { width: 70%; }
+  50% { width: 50%; }
+  80% { width: 80% } 
   100% { width: 100%; }
 }
 

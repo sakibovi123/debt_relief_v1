@@ -10,8 +10,17 @@ function App() {
   const [secondStep, setSecondStep] = useState(false);
   const [thirdStep, setThirdStep] = useState(false);
   const [fourthStep, setFourthStep] = useState(false);
+  const [ form, setForm ] = useState(false);
 
   const [progress, setProgress] = useState(15);
+
+  // variables
+  const [ debtAmount, setSetAmount ] = useState("")
+  const [ state, setState ] = useState("")
+  const [ firstName, setFirstName ] = useState("")
+  const [ lastName, setLastName ] = useState("")
+  const [ phone, setPhone ] = useState("")
+  const [ email, setEmail ] = useState("")
 
   // function increaseWidth(increment) {
   //   // Increase the width by 20%
@@ -27,6 +36,8 @@ function App() {
     // Update the content of the <p> tag with the current value
     const pTag = document.getElementById("rangeValue");
     pTag.textContent = `$` + `${currentValue}`;
+
+    setSetAmount(currentValue)
   }
 
   const handleButton = () => {
@@ -38,6 +49,7 @@ function App() {
     setFirstStep(false);
     setThirdStep(false);
     setFourthStep(false);
+    setForm(false)
 
     setProgress(30);
   };
@@ -46,6 +58,7 @@ function App() {
     setSecondStep(false);
     setFirstStep(false);
     setThirdStep(true);
+    setForm(false)
 
     setProgress(70);
   };
@@ -55,13 +68,54 @@ function App() {
     setFirstStep(false);
     setThirdStep(false);
     setFourthStep(true);
+    setForm(false)
+
+    setProgress(80);
+  };
+
+  const handleFourthStep = () => {
+    setSecondStep(false);
+    setFirstStep(false);
+    setThirdStep(false);
+    setFourthStep(false);
+    setForm(true)
 
     setProgress(100);
-  };
+  }
 
   const handleSelectChange = (event) => {
     setButton(event.target.value); // Update the selected option in the state
   };
+
+  const sendLeads = async() => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/ingest/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "campaign_id": 1,
+          "payload": {
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "phone": phone,
+            "debt_amount": debtAmount,
+            "state": "CA"
+          }
+        })
+      })
+
+      if ( response.status === 200 ) {
+        console.log(response)
+      } else {
+        console.log("Failed")
+      }
+    } catch(error) {
+      return error
+    }
+  }
 
   return (
     <div className="App">
@@ -156,10 +210,12 @@ function App() {
           >
             Yes
           </button>
-          <button className="border border-slate-900 p-1 w-[80%] md:w-[15%] rounded hover:bg-gray-200 transition-all font-semibold">
+          <button onClick={handleSecondStep}
+           className="border border-slate-900 p-1 w-[80%] md:w-[15%] rounded hover:bg-gray-200 transition-all font-semibold">
             SOMETIMES
           </button>
-          <button className="border border-slate-900 p-1 w-[80%] md:w-[15%] rounded hover:bg-gray-200 transition-all font-semibold">
+          <button onClick={handleSecondStep}
+           className="border border-slate-900 p-1 w-[80%] md:w-[15%] rounded hover:bg-gray-200 transition-all font-semibold">
             NO
           </button>
 
@@ -281,7 +337,7 @@ function App() {
           <button className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 transition-all font-semibold">
             I WANT CALL WITH AGENT
           </button>
-          <button className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 transition-all font-semibold">
+          <button onClick={handleFourthStep} className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 transition-all font-semibold">
             EMAIL ME MORE INFO
           </button>
           <button className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 transition-all font-semibold">
@@ -298,6 +354,49 @@ function App() {
           </div>
         </div>
       )}
+      {/* form section */}
+      {
+        form && (
+          <div className="container md:mx-auto w-full flex flex-col items-center justify-center text-center my-[6rem] gap-3">
+            <div className="w-[25%]">
+              <p className="w-full font-semibold text-left text-2xl my-5 text-gray-600">Fill out the form</p>
+              
+            </div>
+            
+            <div className="w-[25%]">
+              <p className="w-full font-semibold text-left">First Name</p>
+              <input onChange={(e) => setFirstName(e.target.value)}
+               type="text" className="w-full border p-2" placeholder="Enter first name" />
+            </div>
+
+            <div className="w-[25%]">
+              <p className="w-full font-semibold text-left">Last Name</p>
+              <input onChange={(e) => setLastName(e.target.value)}
+               type="text" className="w-full border p-2" placeholder="Enter last name" />
+            </div>
+
+            <div className="w-[25%]">
+              <p className="w-full font-semibold text-left">Email Email</p>
+              <input onChange={(e) => setEmail(e.target.value)}
+               type="email" className="w-full border p-2" placeholder="Enter email" />
+            </div>
+
+            <div className="w-[25%]">
+              <p className="w-full font-semibold text-left">Phone</p>
+              <input onChange={(e) => setPhone(e.target.value)}
+               type="phone" className="w-full border p-2" placeholder="Enter phone" />
+            </div>
+
+            <div className="w-[25%]">
+              <button onClick={sendLeads} className="p-2 bg-green-500 w-full rounded text-white transition-all hover:bg-green-600">
+                Send
+                </button>
+            </div>
+        
+          </div>
+        )
+      }
+      
     </div>
   );
 }
