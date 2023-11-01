@@ -6,7 +6,8 @@ import {
   Navigate,
   useNavigate,
 } from "react-router-dom";
-import avt from "../Asset/author_freeman.webp";
+import debtReliefLogo from "../Asset/debt-relief-logo.png";
+import authorImage from "../Asset/agent.jpeg";
 
 const Home = () => {
   const [firstStep, setFirstStep] = useState(true);
@@ -18,7 +19,7 @@ const Home = () => {
   const [progress, setProgress] = useState(15);
 
   // variables
-  const [debtAmount, setSetAmount] = useState("");
+  const [debtAmount, setSetAmount] = useState(25000);
   const [state, setState] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -89,25 +90,26 @@ const Home = () => {
   };
 
   const handleSelectChange = (event) => {
+    setState(event.target.value);
     setButton(event.target.value); // Update the selected option in the state
   };
 
   const sendLeads = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/ingest/", {
+      const response = await fetch("https://api.datahubb.io/api/ingest/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          campaign_id: 5,
+          campaign_id: 1,
           payload: {
             firstName: firstName,
             lastName: lastName,
             email: email,
             phone: phone,
             debt_amount: debtAmount,
-            state: "CA",
+            state: state,
           },
         }),
       });
@@ -124,11 +126,16 @@ const Home = () => {
   };
   return (
     <div>
+      <div className="max-w-[800px] mx-auto mt-3">
+        <div className="max-w-[300px] mx-auto">
+          <img src={debtReliefLogo} alt="" className="w-full" />
+        </div>
+      </div>
       {firstStep && (
-        <div className="container md:mx-auto w-full flex flex-col items-center justify-center text-center my-[6rem]">
-          <div class="w-[80%] md:w-[50%] bg-gray-200 rounded-full h-2.5 my-7 transition-all">
+        <div className="container md:mx-auto w-full flex flex-col items-center justify-center text-center mt-20">
+          <div class="w-[80%] md:w-[30%] bg-gray-200 rounded-full h-2.5 my-7 transition-all">
             <div
-              class="bg-red-400 h-2.5 rounded-full transition-all progress-bar"
+              class="bg-gradient-to-r from-[#f16232] to-[#fff] h-2.5 rounded-full transition-all progress-bar"
               style={{
                 width: `${progress}%`,
               }}
@@ -148,15 +155,16 @@ const Home = () => {
           </div>
           <div className="w-full flex flex-col items-center justify-center my-7">
             <p id="rangeValue" className="text-2xl font-bold text-slate-800">
-              $100
+              $25,000
             </p>
             <div className="w-full flex items-center justify-center gap-3 my-4">
               {/* <p className="min-value font-bold top-[5rem]">$ 100</p> */}
               <input
                 id="default-range"
                 min={1000}
-                max={10000}
+                max={100000}
                 type="range"
+                value={debtAmount}
                 onChange={(event) => handleRangeChange(event)}
                 className="w-[50%] h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
               />
@@ -172,9 +180,9 @@ const Home = () => {
             </div>
             <div className="number-section w-[50%] flex items-center justify-between">
               <p id="rangeValue" className="font-bold text-slate-800">
-                $100
+                $1000
               </p>
-              <p className="max-value font-bold">$ 10,000</p>
+              <p className="max-value font-bold">$ 100,000</p>
             </div>
 
             <button
@@ -186,10 +194,14 @@ const Home = () => {
           </div>
 
           <div className="w-full flex items-center justify-center my-7">
-            <img src={avt} className="rounded-full h-[70px]" />
-            <div className="p-3 bg-white border rounded font-semibold w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
-              <span className="absolute h-[14px] w-[14px] border border-t-0 border-r-0 z-20  bg-white left-0 -translate-x-2 origin-center rotate-45 "></span>
-              We analyze your current debt position to see how we can help you
+            <img
+              src={authorImage}
+              className="rounded-full h-[65px]"
+              alt="Author"
+            />
+            <div className="p-3 bg-gray-100  rounded font-sans font-normal w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
+              <span className="absolute h-[14px] w-[14px]  z-20  bg-gray-100 left-0 -translate-x-2 origin-center rotate-45 "></span>
+              We analyze your current debt position, to see how we can help you
               the best
             </div>
           </div>
@@ -198,10 +210,10 @@ const Home = () => {
 
       {/* second step */}
       {secondStep && (
-        <div className="container md:mx-auto w-full flex flex-col items-center justify-center text-center my-[6rem] gap-3">
-          <div class="w-[80%] md:w-[50%] bg-gray-200 rounded-full h-2.5 my-7">
+        <div className="container md:mx-auto w-full flex flex-col items-center justify-center text-center gap-3 mt-20">
+          <div class="w-[80%] md:w-[30%] bg-gray-200 rounded-full h-2.5 my-7">
             <div
-              class="bg-red-400 h-2.5 rounded-full transition-all progress-bar"
+              class="bg-gradient-to-r from-[#f16232] to-[#fff] h-2.5 rounded-full transition-all progress-bar"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -229,9 +241,13 @@ const Home = () => {
           </button>
 
           <div className="w-full flex items-center justify-center my-7">
-            <img src={avt} className="rounded-full h-[70px]" />
-            <div className="p-3 bg-white border font-semibold rounded w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
-              <span className="absolute h-[14px] w-[14px] border border-t-0 border-r-0 z-20  bg-white left-0 -translate-x-2 origin-center rotate-45 "></span>
+            <img
+              src={authorImage}
+              alt="Author"
+              className="rounded-full h-[65px]"
+            />
+            <div className="p-3 bg-gray-100 font-sans  font-normal rounded w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
+              <span className="absolute h-[14px] w-[14px]  z-20  bg-gray-100 left-0 -translate-x-2 origin-center rotate-45 "></span>
               This helps us determine how much you should take on in your action
               plan.
             </div>
@@ -241,10 +257,10 @@ const Home = () => {
 
       {/* thirstep */}
       {thirdStep && (
-        <div className="container md:mx-auto w-full flex flex-col gap-5 items-center justify-center text-center my-[6rem] gap-3">
-          <div class="w-[80%] md:w-[50%] bg-gray-200 rounded-full h-2.5 my-7">
+        <div className="container md:mx-auto w-full flex flex-col  items-center justify-center text-center  gap-3 mt-20">
+          <div class="w-[80%] md:w-[30%] bg-gray-200 rounded-full h-2.5 my-7">
             <div
-              class="bg-red-400 h-2.5 rounded-full transition-all progress-bar"
+              class="bg-gradient-to-r from-[#f16232] to-[#fff] h-2.5 rounded-full transition-all progress-bar"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -312,7 +328,7 @@ const Home = () => {
           </select>
           {button && (
             <button
-              onClick={handleThirdStep}
+              onClick={handleFourthStep}
               className="border border-slate-900 p-1 w-[80%] md:w-[15%] rounded hover:bg-gray-200 transition-all font-semibold"
             >
               Submit
@@ -320,9 +336,13 @@ const Home = () => {
           )}
 
           <div className="w-full flex items-center justify-center my-7">
-            <img src={avt} className="rounded-full h-[70px]" />
-            <div className="p-3 bg-white border font-semibold rounded w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
-              <span className="absolute h-[14px] w-[14px] border border-t-0 border-r-0 z-20  bg-white left-0 -translate-x-2 origin-center rotate-45 "></span>
+            <img
+              src={authorImage}
+              alt="Author"
+              className="rounded-full h-[65px]"
+            />
+            <div className="p-3 bg-gray-100 font-sans font-normal rounded w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
+              <span className="absolute h-[14px] w-[14px]  z-20  bg-gray-100 left-0 -translate-x-2 origin-center rotate-45 "></span>
               This helps us determine how much you should take on in your action
               plan.
             </div>
@@ -331,8 +351,8 @@ const Home = () => {
       )}
 
       {/* fourth step */}
-      {fourthStep && (
-        <div className="container md:mx-auto w-full flex flex-col items-center justify-center text-center my-[6rem] gap-3">
+      {/* {fourthStep && (
+        <div className="container md:mx-auto w-full flex flex-col items-center justify-center text-center gap-3 mt-20">
           <div class="w-[80%] md:w-[50%] bg-gray-200 rounded-full h-2.5 my-7">
             <div
               class="bg-red-400 h-2.5 rounded-full progress-bar"
@@ -343,90 +363,152 @@ const Home = () => {
           <h2 className="text-3xl font-bold text-gray-600 my-6">
             Are you currently paying on your debt?
           </h2>
-          <button className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 transition-all font-semibold">
+          <button className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200  font-semibold">
             I WANT CALL WITH AGENT
           </button>
           <button
             onClick={handleFourthStep}
-            className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 transition-all font-semibold"
+            className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 font-semibold"
           >
             EMAIL ME MORE INFO
           </button>
-          <button className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200 transition-all font-semibold">
+          <button className="border border-slate-900 p-1 w-[80%] md:w-[25%] rounded hover:bg-gray-200  font-semibold">
             I WANT TO LIVE CHAT WITH A AGENT
           </button>
 
           <div className="w-full flex items-center justify-center my-7">
-            <img src={avt} className="rounded-full h-[70px]" />
-            <div className="p-3 bg-white border  font-semibold rounded w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
-              <span className="absolute h-[14px] w-[14px] border border-t-0 border-r-0 z-20  bg-white left-0 -translate-x-2 origin-center rotate-45 "></span>
+            <img
+              src={authorImage}
+              alt="Author"
+              className="rounded-full h-[65px]"
+            />
+            <div className="p-3 bg-gray-100 font-sans  font-normal rounded w-full md:w-[30%] mx-3 text-left relative flex flex-col justify-center">
+              <span className="absolute h-[14px] w-[14px]  z-20  bg-gray-100 left-0 -translate-x-2 origin-center rotate-45 "></span>
               This helps us determine how much you should take on in your action
               plan.
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {/* form section */}
       {form && (
-        <div className="mt-32 px-3 bg-slate-200 py-12 max-w-[800px] mx-auto shadow-md sm:px-12 sm:rounded">
-          <p className="text-2xl font-semibold text-blue-700 mb-6 sm:text-4xl">
-            Fill out the form.
-          </p>
-          <div className="flex flex-col mb-4">
-            <label
-              htmlFor="first-name"
-              className="text-slate-900 font-semibold "
-            >
-              First Name:
-            </label>
+        <div className="max-w-[1000px] mx-auto mt-10">
+          {/* form header */}
+          <div className="text-center text-slate-700 px-1">
+            <h1 className="text-2xl sm:text-3xl font-semibold mb-2">
+              Great news - You may qualify for debt relief!
+            </h1>
+            <h3 className="text-md sm:text-lg font-semibold ">
+              Complete this form for immediate access to your free savings
+              estimate
+            </h3>
+          </div>
+          {/* End form header */}
+
+          {/* form features */}
+          <div className="my-8 text-slate-700 ">
+            <p className="flex items-center justify-center">
+              <span className="mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill=" #58beaa"
+                    d="M9 16.2L4.8 12l-1.4 1.4L9 19L21 7l-1.4-1.4L9 16.2z"
+                  />
+                </svg>
+              </span>
+              Relief available for many debt types
+            </p>
+            <p className="flex items-center justify-center">
+              <span className="mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill=" #58beaa"
+                    d="M9 16.2L4.8 12l-1.4 1.4L9 19L21 7l-1.4-1.4L9 16.2z"
+                  />
+                </svg>
+              </span>
+              See your monthly and total savings
+            </p>
+            <p className="flex items-center justify-center">
+              <span className="mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill=" #58beaa"
+                    d="M9 16.2L4.8 12l-1.4 1.4L9 19L21 7l-1.4-1.4L9 16.2z"
+                  />
+                </svg>
+              </span>
+              Take control of your financial future
+            </p>
+          </div>
+          {/* End form features */}
+
+          {/* form fields */}
+          <div className="flex flex-col items-center justify-center gap-4">
             <input
               type="text"
-              id="first-name"
-              className="border focus:outline-none focus:border-purple-600 px-2 py-1 text-lg sm:text-xl sm:py-2"
+              placeholder="First Name"
+              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
               onChange={(e) => setFirstName(e.target.value)}
             />
-          </div>
-          <div className="flex flex-col mb-4">
-            <label htmlFor="last-name" className="text-slate-900 font-semibold">
-              Last Name:
-            </label>
             <input
               type="text"
-              id="last-name"
-              className="border focus:outline-none focus:border-purple-600 px-2 py-1 text-lg sm:text-xl sm:py-2"
+              placeholder="Last Name"
+              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
               onChange={(e) => setLastName(e.target.value)}
             />
-          </div>
-          <div className="flex flex-col  mb-4">
-            <label htmlFor="e-mail" className="text-slate-900 font-semibold">
-              Email:
-            </label>
             <input
               type="email"
-              id="e-mail"
-              className="border focus:outline-none focus:border-purple-600 px-2 py-1 text-lg sm:text-xl sm:py-2"
+              placeholder="Email"
+              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
               onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
-          <div className="flex flex-col  mb-6">
-            <label htmlFor="phone" className="text-slate-900 font-semibold">
-              Phone:
-            </label>
             <input
               type="text"
-              id="phone"
-              className="border focus:outline-none focus:border-purple-600 px-2 py-1 text-lg sm:text-xl sm:py-2"
+              placeholder="Phone"
+              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
               onChange={(e) => setPhone(e.target.value)}
             />
-          </div>
-          <div className="text-center w-full">
             <button
-              className="bg-green-600 w-full text-white py-4 text-lg sm:text-2xl"
+              className="w-[80%] md:w-[40%] bg-[#58beaa] text-xl font-semibold py-3 rounded-md"
               onClick={sendLeads}
             >
-              Send
+              See if You Qualify
             </button>
           </div>
+          {/* End form fields */}
+
+          {/* description */}
+          <div className="w-[80%] mx-auto mt-10 text-gray-600">
+            <p className="text-[12px] sm:text-[14px] text-center leading-6">
+              By clicking <strong>"See if ou Qualify" above</strong>, you agree
+              that the phone number and email address you are providing may be
+              used to contact you by <strong>Debt Relief Helpdesk</strong>
+              (including auto-dialed/auto-selected and prerecorded calls, as
+              well as text/SMS messages). Msg and data rates apply, and your
+              consent to such contact/marketing is not required for purchase.
+              Msg frequency varies; max 2 texts per day and 7 texts per week. We
+              ma also e-mail ou and you may let us know at any time if you are
+              no longer interested in hearing from us via a particular
+              communication platform.
+            </p>
+          </div>
+          {/* End description */}
         </div>
       )}
     </div>
