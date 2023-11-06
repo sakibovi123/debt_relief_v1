@@ -17,8 +17,6 @@ const Home = () => {
   const [fourthStep, setFourthStep] = useState(false);
   const [form, setForm] = useState(false);
 
-  
-
   const [showFormErrorFirstName, setShowFormErrorFirstName] = useState(false);
   const [showFormErrorLastName, setShowFormErrorLastName] = useState(false);
   const [showFormErrorEmail, setShowFormErrorEmail] = useState(false);
@@ -36,7 +34,7 @@ const Home = () => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const [loadingDot1, setloadingDot1] = useState(false)
+  const [loadingDot1, setloadingDot1] = useState(false);
 
   const navigate = useNavigate();
 
@@ -106,9 +104,7 @@ const Home = () => {
     setButton(event.target.value); // Update the selected option in the state
   };
 
-  const animatedDots = () =>{
-
-  }
+  const animatedDots = () => {};
 
   const sendLeads = async () => {
     if (firstName !== "" && lastName !== "" && email !== "" && phone !== "") {
@@ -496,7 +492,7 @@ const Home = () => {
                 Form has been submitted{" "}
                 <BsCheckLg className="text-4xl lg:text-6xl text-[#58beaa]" />{" "}
               </p>
-              <p className="text-center text-xl font-semibold text-slate-700">Redirecting...</p>
+              <p className="mt-4 text-center text-xl font-semibold text-slate-700 flex items-center justify-center">Redirecting <div className="spinner-3 ml-3"></div></p>
             </div>
           ) : (
             <div>
