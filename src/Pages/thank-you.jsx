@@ -6,8 +6,9 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+
 import headerLogo from "../Asset/debt-relief-logo.png";
-import thankYouImg from "../Asset/thank-you-img.jpg";
 import firstOfferImage from "../Asset/cash750.png";
 
 const ThankYou = () => {
@@ -597,30 +598,38 @@ const ThankYou = () => {
         <p>
           {" "}
           Copyright 2023,{" "}
-          <a
-            className="text-blue-500"
-            href="https://debtreliefhelpdesk.com/"
-            target="blank"
+          <Link
+            className="text-slate-300 ml-3 hover:text-white duration-300"
+            // href={goHome}
+            target="_blank"
+            to="/"
           >
-            Debtreliefhelpdesk.com 
-          </a>
-           <a className="text-blue-500" href="Terms of Use " target="blank"></a>
+            Debtreliefhelpdesk.com
+          </Link>
            • 
           <a
-            className="text-blue-500"
-            href="https://savingproviders.com/survey2/privacy.html"
-            target="blank"
+            className="text-slate-300 ml-3 hover:text-white duration-300"
+            href="https://debtreliefhelpdesk.com/chat/en/tos.html"
+            target="_blank"
+          >
+            Terms of Use
+          </a>
+           • 
+          <a
+            className="text-slate-300 ml-3 hover:text-white duration-300"
+            href="https://debtreliefhelpdesk.com/chat/en/pp.html"
+            target="_blank"
           >
             Privacy Policy 
           </a>
-           • 
+          {/*  • 
           <a
-            className="text-blue-500"
+            className="text-slate-300 ml-3 hover:text-white duration-300"
             href="https://savingproviders.com/survey2/privacy.html#donotsell"
             target="blank"
           >
             Do Not Sell My Info
-          </a>
+          </a> */}
         </p>
       </div>
     </div>

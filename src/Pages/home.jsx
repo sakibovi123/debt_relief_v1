@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import debtReliefLogo from "../Asset/debt-relief-logo.png";
 import authorImage from "../Asset/agent.jpeg";
+import { BsCheckLg } from "react-icons/bs";
 
 const Home = () => {
   const [firstStep, setFirstStep] = useState(true);
@@ -15,6 +16,13 @@ const Home = () => {
   const [thirdStep, setThirdStep] = useState(false);
   const [fourthStep, setFourthStep] = useState(false);
   const [form, setForm] = useState(false);
+
+  
+
+  const [showFormErrorFirstName, setShowFormErrorFirstName] = useState(false);
+  const [showFormErrorLastName, setShowFormErrorLastName] = useState(false);
+  const [showFormErrorEmail, setShowFormErrorEmail] = useState(false);
+  const [showFormErrorPhone, setShowFormErrorPhone] = useState(false);
 
   const [progress, setProgress] = useState(15);
 
@@ -25,6 +33,10 @@ const Home = () => {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const [loadingDot1, setloadingDot1] = useState(false)
 
   const navigate = useNavigate();
 
@@ -94,34 +106,54 @@ const Home = () => {
     setButton(event.target.value); // Update the selected option in the state
   };
 
-  const sendLeads = async () => {
-    try {
-      const response = await fetch("https://api.datahubb.io/api/ingest/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          campaign_id: 1,
-          payload: {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            debt_amount: debtAmount,
-            state: state,
-          },
-        }),
-      });
+  const animatedDots = () =>{
 
-      navigate("thank-you/");
-      if (response.status === 200) {
-        console.log(response);
-      } else {
-        console.log("Failed");
+  }
+
+  const sendLeads = async () => {
+    if (firstName !== "" && lastName !== "" && email !== "" && phone !== "") {
+      try {
+        const response = await fetch("https://api.datahubb.io/api/ingest/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            campaign_id: 1,
+            payload: {
+              firstName: firstName,
+              lastName: lastName,
+              email: email,
+              phone: phone,
+              debt_amount: debtAmount,
+              state: state,
+            },
+          }),
+        });
+
+        setFormSubmitted(true);
+
+        setTimeout(() => {
+          navigate("thank-you/");
+          if (response.status === 200) {
+            console.log(response);
+          } else {
+            console.log("Failed");
+          }
+        }, 3000);
+      } catch (error) {
+        return error;
       }
-    } catch (error) {
-      return error;
+    } else {
+      if (firstName === "") {
+        setShowFormErrorFirstName(true);
+      } else if (lastName === "") {
+        setShowFormErrorLastName(true);
+      } else if (email === "") {
+        setShowFormErrorEmail(true);
+      } else {
+        setShowFormErrorPhone(true);
+      }
     }
   };
   return (
@@ -458,57 +490,98 @@ const Home = () => {
           </div>
           {/* End form features */}
 
-          {/* form fields */}
-          <div className="flex flex-col items-center justify-center gap-4">
-            <input
-              type="text"
-              placeholder="First Name"
-              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Phone"
-              className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <button
-              className="w-[80%] md:w-[40%] bg-[#58beaa] text-xl font-semibold py-3 rounded-md"
-              onClick={sendLeads}
-            >
-              See if You Qualify
-            </button>
-          </div>
-          {/* End form fields */}
+          {formSubmitted === true ? (
+            <div className="mt-20">
+              <p className="text-center flex items-center justify-center text-2xl lg:text-4xl  font-semibold text-slate-700">
+                Form has been submitted{" "}
+                <BsCheckLg className="text-4xl lg:text-6xl text-[#58beaa]" />{" "}
+              </p>
+              <p className="text-center text-xl font-semibold text-slate-700">Redirecting...</p>
+            </div>
+          ) : (
+            <div>
+              {/* form fields */}
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div className="w-full flex flex-col items-center justify-center">
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                  {showFormErrorFirstName && (
+                    <p className="text-sm text-red-600">
+                      *Invalid input. Please enter valid input.
+                    </p>
+                  )}
+                </div>
+                <div className="w-full flex flex-col items-center justify-center">
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                  {showFormErrorLastName && (
+                    <p className="text-sm text-red-600">
+                      *Invalid input. Please enter valid input.
+                    </p>
+                  )}
+                </div>
+                <div className="w-full flex flex-col items-center justify-center">
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  {showFormErrorEmail && (
+                    <p className="text-sm text-red-600">
+                      *Invalid input. Please enter valid input.
+                    </p>
+                  )}
+                </div>
+                <div className="w-full flex flex-col items-center justify-center">
+                  <input
+                    type="text"
+                    placeholder="Phone"
+                    className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                  {showFormErrorPhone && (
+                    <p className="text-sm text-red-600">
+                      *Invalid input. Please enter valid input.
+                    </p>
+                  )}
+                </div>
+                <button
+                  className="w-[80%] md:w-[40%] bg-[#58beaa] text-xl font-semibold py-3 rounded-md"
+                  onClick={sendLeads}
+                >
+                  See if You Qualify
+                </button>
+              </div>
+              {/* End form fields */}
 
-          {/* description */}
-          <div className="w-[80%] mx-auto mt-10 text-gray-600">
-            <p className="text-[12px] sm:text-[14px] text-center leading-6">
-              By clicking <strong>"See if ou Qualify" above</strong>, you agree
-              that the phone number and email address you are providing may be
-              used to contact you by <strong>Debt Relief Helpdesk</strong>
-              (including auto-dialed/auto-selected and prerecorded calls, as
-              well as text/SMS messages). Msg and data rates apply, and your
-              consent to such contact/marketing is not required for purchase.
-              Msg frequency varies; max 2 texts per day and 7 texts per week. We
-              ma also e-mail ou and you may let us know at any time if you are
-              no longer interested in hearing from us via a particular
-              communication platform.
-            </p>
-          </div>
-          {/* End description */}
+              {/* description */}
+              <div className="w-[80%] mx-auto mt-10 text-gray-600">
+                <p className="text-[12px] sm:text-[14px] text-center leading-6">
+                  By clicking <strong>"See if ou Qualify" above</strong>, you
+                  agree that the phone number and email address you are
+                  providing may be used to contact you by{" "}
+                  <strong>Debt Relief Helpdesk</strong>
+                  (including auto-dialed/auto-selected and prerecorded calls, as
+                  well as text/SMS messages). Msg and data rates apply, and your
+                  consent to such contact/marketing is not required for
+                  purchase. Msg frequency varies; max 2 texts per day and 7
+                  texts per week. We ma also e-mail ou and you may let us know
+                  at any time if you are no longer interested in hearing from us
+                  via a particular communication platform.
+                </p>
+              </div>
+              {/* End description */}
+            </div>
+          )}
         </div>
       )}
     </div>
