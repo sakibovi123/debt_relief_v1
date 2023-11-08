@@ -492,7 +492,9 @@ const Home = () => {
                 Form has been submitted{" "}
                 <BsCheckLg className="text-4xl lg:text-6xl text-[#58beaa]" />{" "}
               </p>
-              <p className="mt-4 text-center text-xl font-semibold text-slate-700 flex items-center justify-center">Redirecting <div className="spinner-3 ml-3"></div></p>
+              <p className="mt-4 text-center text-xl font-semibold text-slate-700 flex items-center justify-center">
+                Redirecting <div className="spinner-3 ml-3"></div>
+              </p>
             </div>
           ) : (
             <div>
@@ -539,9 +541,12 @@ const Home = () => {
                 </div>
                 <div className="w-full flex flex-col items-center justify-center">
                   <input
-                    type="text"
+                    type="tel"
+                    maxLength="14"
+                    inputMode="numeric"
                     placeholder="Phone"
                     className="border border-gray-300 w-[80%] md:w-[40%] py-2 px-5 focus:outline-none focus:border-[#58beaa] focus:border-2 rounded"
+                    pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}"
                     onChange={(e) => setPhone(e.target.value)}
                   />
                   {showFormErrorPhone && (
